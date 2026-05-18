@@ -179,15 +179,24 @@ function Install-BreezeTest {
     }
 
     # Retry wrapper
-    for ($i = 1; $i -le 3; $i++) {
-        try {
-            pip install --upgrade pip 2>$null
-            pip install $pkg
-            break
-        } catch {
-            if ($i -eq 3) { throw }
-            Write-Warn "Attempt $i/3 failed, retrying in $($i * 2)s..."
-            Start-Sleep -Seconds ($i * 2)
+    pip install --upgrade pip 2>$null
+
+    # Try PyPI first, fall back to GitHub if not published yet
+    try {
+        pip install $pkg 2>$null
+    } catch {
+        Write-Warn "BreezeTest not found on PyPI, installing from GitHub..."
+        $githubUrl = "https://github.com/tryroot1234/breezetest.git"
+        if ($Version) { $githubUrl = "${githubUrl}@v$Version" }
+        for ($i = 1; $i -le 3; $i++) {
+            try {
+                pip install "git+$githubUrl"
+                break
+            } catch {
+                if ($i -eq 3) { throw }
+                Write-Warn "Attempt $i/3 failed, retrying..."
+                Start-Sleep -Seconds ($i * 2)
+            }
         }
     }
 

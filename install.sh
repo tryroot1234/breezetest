@@ -13,6 +13,7 @@ VENV_DIR="${BREEZETEST_VENV_DIR:-.breezetest-venv}"
 
 # --- Flags ---
 NO_VENV=false
+SKIP_PLAYWRIGHT=false
 PYTHON_PATH=""
 SHOW_HELP=false
 DRY_RUN=false
@@ -59,6 +60,7 @@ Usage: install.sh [OPTIONS]
 Options:
   --help, -h          Show this help message
   --no-venv           Skip virtual environment creation
+  --skip-playwright   Skip Playwright browser installation
   --python PATH       Use specific Python interpreter
   --dry-run           Show what would be done without executing
 
@@ -77,13 +79,14 @@ EOF
 # --- Argument parsing ---
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --help|-h)     SHOW_HELP=true; shift ;;
-        --no-venv)     NO_VENV=true; shift ;;
-        --python)      PYTHON_PATH="$2"; shift 2 ;;
-        --python=*)    PYTHON_PATH="${1#*=}"; shift ;;
-        --dry-run)     DRY_RUN=true; shift ;;
-        -*)            log_error "Unknown option: $1"; usage; exit 1 ;;
-        *)             log_error "Unexpected argument: $1"; usage; exit 1 ;;
+        --help|-h)          SHOW_HELP=true; shift ;;
+        --no-venv)          NO_VENV=true; shift ;;
+        --skip-playwright)  SKIP_PLAYWRIGHT=true; shift ;;
+        --python)           PYTHON_PATH="$2"; shift 2 ;;
+        --python=*)         PYTHON_PATH="${1#*=}"; shift ;;
+        --dry-run)          DRY_RUN=true; shift ;;
+        -*)                 log_error "Unknown option: $1"; usage; exit 1 ;;
+        *)                  log_error "Unexpected argument: $1"; usage; exit 1 ;;
     esac
 done
 
@@ -372,7 +375,12 @@ main() {
     install_breezetest
 
     # Install Playwright
-    install_playwright
+    if $SKIP_PLAYWRIGHT; then
+        log_warn "Skipping Playwright browser installation (--skip-playwright)"
+        log_info "Run 'playwright install --with-deps chromium' later to install the browser."
+    else
+        install_playwright
+    fi
 
     # Done
     if ! $DRY_RUN; then

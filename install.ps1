@@ -7,6 +7,7 @@
 param(
     [switch]$Help,
     [switch]$NoVenv,
+    [switch]$SkipPlaywright,
     [string]$PythonPath = "",
     [string]$Version = "",
     [switch]$DryRun
@@ -275,7 +276,12 @@ if (-not $NoVenv) {
 Install-BreezeTest
 
 # Install Playwright
-Install-PlaywrightBrowser
+if ($SkipPlaywright) {
+    Write-Warn "Skipping Playwright browser installation (-SkipPlaywright)"
+    Write-Log "Run 'playwright install --with-deps chromium' later to install the browser."
+} else {
+    Install-PlaywrightBrowser
+}
 
 # Done
 if (-not $DryRun) {

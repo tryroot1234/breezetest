@@ -18,12 +18,12 @@ if TYPE_CHECKING:
 
 @register("assert_visible")
 async def action_assert_visible(page: Page, locator: Locator, step: Step, ctx: TestContext) -> None:
-    expect(locator).to_be_visible(timeout=step.options.get("timeout", ctx.config.timeout))
+    await expect(locator).to_be_visible(timeout=step.options.get("timeout", ctx.config.timeout))
 
 
 @register("assert_hidden")
 async def action_assert_hidden(page: Page, locator: Locator, step: Step, ctx: TestContext) -> None:
-    expect(locator).to_be_hidden(timeout=step.options.get("timeout", ctx.config.timeout))
+    await expect(locator).to_be_hidden(timeout=step.options.get("timeout", ctx.config.timeout))
 
 
 @register("assert_text")
@@ -31,15 +31,15 @@ async def action_assert_text(page: Page, locator: Locator, step: Step, ctx: Test
     expected = ctx.resolve_variables(step.value)
     timeout = step.options.get("timeout", ctx.config.timeout)
     if step.options.get("exact", False):
-        expect(locator).to_have_text(expected, timeout=timeout)
+        await expect(locator).to_have_text(expected, timeout=timeout)
     else:
-        expect(locator).to_contain_text(expected, timeout=timeout)
+        await expect(locator).to_contain_text(expected, timeout=timeout)
 
 
 @register("assert_value")
 async def action_assert_value(page: Page, locator: Locator, step: Step, ctx: TestContext) -> None:
     expected = ctx.resolve_variables(step.value)
-    expect(locator).to_have_value(
+    await expect(locator).to_have_value(
         expected, timeout=step.options.get("timeout", ctx.config.timeout)
     )
 
@@ -50,7 +50,7 @@ async def action_assert_attribute(
 ) -> None:
     attr = step.options.get("attribute", "href")
     expected = ctx.resolve_variables(step.value)
-    expect(locator).to_have_attribute(
+    await expect(locator).to_have_attribute(
         attr, expected, timeout=step.options.get("timeout", ctx.config.timeout)
     )
 
@@ -63,25 +63,25 @@ async def action_assert_count(page: Page, locator: Locator, step: Step, ctx: Tes
     timeout = step.options.get("timeout", ctx.config.timeout)
 
     if op == "eq":
-        expect(locator).to_have_count(count, timeout=timeout)
+        await expect(locator).to_have_count(count, timeout=timeout)
     elif op == "gte":
-        expect(locator).to_have_count(
+        await expect(locator).to_have_count(
             lambda n, c=count: n >= c, timeout=timeout
         )
     elif op == "lte":
-        expect(locator).to_have_count(
+        await expect(locator).to_have_count(
             lambda n, c=count: n <= c, timeout=timeout
         )
     elif op == "gt":
-        expect(locator).to_have_count(
+        await expect(locator).to_have_count(
             lambda n, c=count: n > c, timeout=timeout
         )
     elif op == "lt":
-        expect(locator).to_have_count(
+        await expect(locator).to_have_count(
             lambda n, c=count: n < c, timeout=timeout
         )
     elif op == "ne":
-        expect(locator).to_have_count(
+        await expect(locator).to_have_count(
             lambda n, c=count: n != c, timeout=timeout
         )
 
@@ -90,9 +90,9 @@ async def action_assert_count(page: Page, locator: Locator, step: Step, ctx: Tes
 async def action_assert_url(page: Page, locator: None, step: Step, ctx: TestContext) -> None:
     expected = ctx.resolve_variables(step.value)
     if step.options.get("exact", False):
-        expect(page).to_have_url(expected, timeout=step.options.get("timeout", ctx.config.timeout))
+        await expect(page).to_have_url(expected, timeout=step.options.get("timeout", ctx.config.timeout))
     else:
-        expect(page).to_have_url(
+        await expect(page).to_have_url(
             f"*{expected}*",
             timeout=step.options.get("timeout", ctx.config.timeout),
         )
@@ -101,25 +101,25 @@ async def action_assert_url(page: Page, locator: None, step: Step, ctx: TestCont
 @register("assert_title")
 async def action_assert_title(page: Page, locator: None, step: Step, ctx: TestContext) -> None:
     expected = ctx.resolve_variables(step.value)
-    expect(page).to_have_title(
+    await expect(page).to_have_title(
         expected, timeout=step.options.get("timeout", ctx.config.timeout)
     )
 
 
 @register("assert_enabled")
 async def action_assert_enabled(page: Page, locator: Locator, step: Step, ctx: TestContext) -> None:
-    expect(locator).to_be_enabled(timeout=step.options.get("timeout", ctx.config.timeout))
+    await expect(locator).to_be_enabled(timeout=step.options.get("timeout", ctx.config.timeout))
 
 
 @register("assert_disabled")
 async def action_assert_disabled(
     page: Page, locator: Locator, step: Step, ctx: TestContext
 ) -> None:
-    expect(locator).to_be_disabled(timeout=step.options.get("timeout", ctx.config.timeout))
+    await expect(locator).to_be_disabled(timeout=step.options.get("timeout", ctx.config.timeout))
 
 
 @register("assert_checked")
 async def action_assert_checked(
     page: Page, locator: Locator, step: Step, ctx: TestContext
 ) -> None:
-    expect(locator).to_be_checked(timeout=step.options.get("timeout", ctx.config.timeout))
+    await expect(locator).to_be_checked(timeout=step.options.get("timeout", ctx.config.timeout))

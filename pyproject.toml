@@ -1,0 +1,71 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "breezetest"
+version = "0.1.0"
+description = "E2E testing should be a breeze - YAML-driven browser testing powered by Playwright"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+authors = [
+    { name = "BreezeTest Contributors" },
+]
+keywords = ["testing", "e2e", "browser", "playwright", "yaml", "automation"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Testing",
+]
+dependencies = [
+    "playwright>=1.40.0",
+    "pyyaml>=6.0",
+    "pydantic>=2.0",
+    "click>=8.0",
+    "rich>=13.0",
+    "jinja2>=3.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "pytest-cov",
+    "ruff",
+    "mypy",
+]
+
+[project.scripts]
+breeze = "breezetest.cli.main:cli"
+
+[project.entry-points."breezetest.plugins"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/breezetest"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/breezetest/reporting/templates" = "breezetest/reporting/templates"
+
+[tool.ruff]
+target-version = "py39"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

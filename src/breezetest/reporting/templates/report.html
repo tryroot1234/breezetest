@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BreezeTest Report - {{ suite.suite_name }}</title>
+<style>
+:root {
+  --bg: #ffffff; --fg: #1a1a2e; --border: #e0e0e0;
+  --pass: #10b981; --fail: #ef4444; --skip: #f59e0b; --error: #dc2626;
+  --card-bg: #f9fafb; --hover: #f3f4f6;
+}
+.dark {
+  --bg: #0f172a; --fg: #e2e8f0; --border: #334155;
+  --card-bg: #1e293b; --hover: #334155;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--fg); line-height: 1.6; }
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+h1 { font-size: 1.5rem; }
+.meta { font-size: 0.85rem; color: #666; }
+.dark .meta { color: #94a3b8; }
+.toggle { cursor: pointer; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--fg); font-size: 0.8rem; }
+.stats { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
+.stat { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; flex: 1; min-width: 120px; text-align: center; }
+.stat .number { font-size: 2rem; font-weight: bold; }
+.stat .label { font-size: 0.85rem; color: #666; }
+.dark .stat .label { color: #94a3b8; }
+.stat.passed .number { color: var(--pass); }
+.stat.failed .number { color: var(--fail); }
+.stat.skipped .number { color: var(--skip); }
+.stat.error .number { color: var(--error); }
+.filters { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+.filters input { padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--fg); width: 300px; }
+.filters button { padding: 8px 16px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--fg); cursor: pointer; }
+.filters button.active { background: var(--fg); color: var(--bg); }
+.test-case { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+.test-header { padding: 12px 16px; cursor: pointer; display: flex; align-items: center; gap: 12px; background: var(--card-bg); }
+.test-header:hover { background: var(--hover); }
+.badge { padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+.badge.passed { background: #d1fae5; color: #065f46; }
+.badge.failed { background: #fee2e2; color: #991b1b; }
+.badge.skipped { background: #fef3c7; color: #92400e; }
+.badge.error { background: #fee2e2; color: #991b1b; }
+.dark .badge.passed { background: #064e3b; color: #6ee7b7; }
+.dark .badge.failed { background: #7f1d1d; color: #fca5a5; }
+.dark .badge.skipped { background: #78350f; color: #fcd34d; }
+.dark .badge.error { background: #7f1d1d; color: #fca5a5; }
+.test-name { flex: 1; font-weight: 500; }
+.test-duration { font-size: 0.85rem; color: #666; }
+.dark .test-duration { color: #94a3b8; }
+.test-body { padding: 0 16px 16px; display: none; }
+.test-case.open .test-body { display: block; }
+.step { padding: 8px 12px; border-left: 3px solid var(--border); margin: 4px 0; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+.step.passed { border-left-color: var(--pass); }
+.step.failed { border-left-color: var(--fail); }
+.step.skipped { border-left-color: var(--skip); }
+.step.error { border-left-color: var(--error); }
+.step-action { font-weight: 600; min-width: 160px; }
+.step-detail { color: #666; }
+.dark .step-detail { color: #94a3b8; }
+.step-error { color: var(--fail); font-size: 0.85rem; margin-top: 4px; }
+.screenshot { max-width: 600px; margin: 8px 0; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; }
+.screenshot-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; }
+.screenshot-modal.show { display: flex; }
+.screenshot-modal img { max-width: 95%; max-height: 95%; border-radius: 8px; }
+footer { text-align: center; padding: 30px; font-size: 0.85rem; color: #666; }
+.dark footer { color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div>
+      <h1>BreezeTest Report</h1>
+      <div class="meta">{{ suite.suite_name }} &middot; {{ generated_at }} &middot; {{ suite.browser }}</div>
+    </div>
+    <button class="toggle" onclick="document.body.classList.toggle('dark')">Toggle Dark Mode</button>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><div class="number">{{ suite.total }}</div><div class="label">Total</div></div>
+    <div class="stat passed"><div class="number">{{ suite.passed }}</div><div class="label">Passed</div></div>
+    <div class="stat failed"><div class="number">{{ suite.failed }}</div><div class="label">Failed</div></div>
+    <div class="stat skipped"><div class="number">{{ suite.skipped }}</div><div class="label">Skipped</div></div>
+    <div class="stat"><div class="number">{{ "%.1f"|format(suite.duration_ms / 1000) }}s</div><div class="label">Duration</div></div>
+  </div>
+
+  <div class="filters">
+    <input type="text" id="search" placeholder="Search tests..." oninput="filterTests()">
+    <button class="active" onclick="setStatusFilter('all', this)">All</button>
+    <button onclick="setStatusFilter('passed', this)">Passed</button>
+    <button onclick="setStatusFilter('failed', this)">Failed</button>
+    <button onclick="setStatusFilter('skipped', this)">Skipped</button>
+  </div>
+
+  {% for test in suite.tests %}
+  <div class="test-case" data-status="{{ test.status }}" data-name="{{ test.test_name|lower }}">
+    <div class="test-header" onclick="this.parentElement.classList.toggle('open')">
+      <span class="badge {{ test.status }}">{{ test.status }}</span>
+      <span class="test-name">{{ test.test_name }}</span>
+      <span class="test-duration">{{ "%.2f"|format(test.duration_ms / 1000) }}s</span>
+    </div>
+    <div class="test-body">
+      {% for step in test.steps %}
+      <div class="step {{ step.status }}">
+        <span class="step-action">{{ step.step.action }}</span>
+        <span class="step-detail">
+          {% if step.step.selector %}{{ step.step.selector }}{% endif %}
+          {% if step.step.value is not none %} = {{ step.step.value }}{% endif %}
+          ({{ "%.0f"|format(step.duration_ms) }}ms)
+        </span>
+      </div>
+      {% if step.error_message %}
+      <div class="step-error">{{ step.error_message }}</div>
+      {% endif %}
+      {% if step.screenshot_path and step._b64_screenshot %}
+      <img class="screenshot" src="data:image/png;base64,{{ step._b64_screenshot }}" onclick="showScreenshot(this.src)" alt="screenshot">
+      {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="screenshot-modal" onclick="this.classList.remove('show')">
+  <img id="modal-img" src="" alt="screenshot">
+</div>
+
+<footer>Generated by BreezeTest v0.1.0</footer>
+
+<script>
+function setStatusFilter(status, btn) {
+  document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.test-case').forEach(tc => {
+    tc.style.display = (status === 'all' || tc.dataset.status === status) ? '' : 'none';
+  });
+}
+function filterTests() {
+  const q = document.getElementById('search').value.toLowerCase();
+  document.querySelectorAll('.test-case').forEach(tc => {
+    tc.style.display = tc.dataset.name.includes(q) ? '' : 'none';
+  });
+}
+function showScreenshot(src) {
+  document.getElementById('modal-img').src = src;
+  document.querySelector('.screenshot-modal').classList.add('show');
+}
+</script>
+</body>
+</html>

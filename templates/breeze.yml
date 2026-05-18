@@ -1,0 +1,8 @@
+config:
+  base_url: "https://example.com"
+  browser: chromium
+  headless: true
+  timeout: 30000
+  variables: {}
+
+tests: []

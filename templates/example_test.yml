@@ -1,0 +1,23 @@
+config:
+  base_url: "https://example.com"
+  browser: chromium
+  headless: true
+
+tests:
+  - name: "Page loads successfully"
+    tags: [smoke]
+    steps:
+      - action: goto
+        value: "/"
+        description: "Navigate to home page"
+      - action: assert_visible
+        selector: "h1"
+        description: "Title should be visible"
+
+  - name: "Has correct title"
+    tags: [smoke]
+    steps:
+      - action: goto
+        value: "/"
+      - action: assert_title
+        value: "Example Domain"

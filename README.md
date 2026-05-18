@@ -2,6 +2,8 @@
 
 > E2E testing should be a breeze
 
+English | [中文](README_CN.md)
+
 BreezeTest is a YAML-driven end-to-end testing framework powered by Playwright. Define your browser tests in simple YAML files and run them with a single command.
 
 ## Features

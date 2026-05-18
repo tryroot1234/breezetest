@@ -291,14 +291,23 @@ install_breezetest() {
 
     retry pip install --upgrade pip
 
+    # Check if already installed
+    local existing_version
+    existing_version=$(breeze --version 2>/dev/null || true)
+
     # Try PyPI first, fall back to GitHub if not published yet
-    if ! pip install "$pkg" 2>/dev/null; then
+    if ! pip install --upgrade "$pkg" 2>/dev/null; then
         log_warn "BreezeTest not found on PyPI, installing from GitHub..."
         local github_url="https://github.com/tryroot1234/breezetest.git"
         if [[ -n "$BREEZETEST_VERSION" ]]; then
             github_url="${github_url}@v${BREEZETEST_VERSION}"
         fi
-        retry pip install "git+${github_url}"
+        if [[ -n "$existing_version" ]]; then
+            log_info "Updating from $existing_version..."
+            retry pip install --force-reinstall "git+${github_url}"
+        else
+            retry pip install "git+${github_url}"
+        fi
     fi
 
     local installed_version

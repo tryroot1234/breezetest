@@ -60,6 +60,18 @@ class TestRunner:
             result = self._build_dry_run_result(all_tests)
             for test_result in result.tests:
                 console.print_test_result(test_result)
+
+            # Generate reports for dry-run too
+            report_dir = Path(self.run_config.report_dir)
+            if self.run_config.html:
+                gen = HtmlReportGenerator(report_dir)
+                html_path = gen.generate(result)
+                console.print_report_path(str(html_path))
+            if self.run_config.junit:
+                gen = JunitXmlReporter(report_dir)
+                xml_path = gen.generate(result)
+                console.print_report_path(str(xml_path))
+
             console.print_summary(result)
             return result
 

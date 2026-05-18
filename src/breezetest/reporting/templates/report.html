@@ -76,7 +76,7 @@ footer { text-align: center; padding: 30px; font-size: 0.85rem; color: #666; }
   <header>
     <div>
       <h1 data-i18n="title">BreezeTest 测试报告</h1>
-      <div class="meta">{{ suite.suite_name }} &middot; {{ generated_at }} &middot; {{ suite.browser }}</div>
+      <div class="meta">{{ suite.suite_name }} &middot; {{ generated_at }} &middot; {{ suite.browser }}{% if suite.base_url %} &middot; <a href="{{ suite.base_url }}" target="_blank" style="color: inherit;">{{ suite.base_url }}</a>{% endif %}</div>
     </div>
     <div class="header-actions">
       <button class="lang-btn" onclick="toggleLang()">EN/中</button>

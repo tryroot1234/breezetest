@@ -25,6 +25,12 @@ class JunitXmlReporter:
         testsuite.set("skipped", str(suite_result.skipped))
         testsuite.set("time", f"{suite_result.duration_ms / 1000:.3f}")
 
+        if suite_result.base_url:
+            properties = ET.SubElement(testsuite, "properties")
+            prop = ET.SubElement(properties, "property")
+            prop.set("name", "base_url")
+            prop.set("value", suite_result.base_url)
+
         for test in suite_result.tests:
             testcase = ET.SubElement(testsuite, "testcase")
             testcase.set("name", test.test_name)

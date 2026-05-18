@@ -210,6 +210,12 @@ class TestRunner:
             s.source_file.stem for s in suites if s.source_file
         ) or "unnamed"
 
+        # Extract base_url from the first suite's merged config
+        base_url = None
+        if suites:
+            merged = self._merge_config(suites[0].config)
+            base_url = merged.base_url
+
         return SuiteResult(
             suite_name=suite_name,
             tests=results,
@@ -221,6 +227,7 @@ class TestRunner:
             duration_ms=total_ms,
             timestamp=datetime.now(),
             browser=self.run_config.browser,
+            base_url=base_url,
         )
 
     def _build_dry_run_result(
@@ -234,6 +241,10 @@ class TestRunner:
                 duration_ms=0,
                 parameters=None,
             ))
+        base_url = None
+        if tests:
+            base_url = tests[0][1].base_url
+
         return SuiteResult(
             suite_name="dry-run",
             tests=results,
@@ -241,4 +252,5 @@ class TestRunner:
             skipped=len(results),
             timestamp=datetime.now(),
             browser=self.run_config.browser,
+            base_url=base_url,
         )

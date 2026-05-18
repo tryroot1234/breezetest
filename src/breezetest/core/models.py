@@ -80,6 +80,7 @@ class SuiteResult(BaseModel):
     duration_ms: float = 0.0
     timestamp: datetime = Field(default_factory=datetime.now)
     browser: str = "chromium"
+    base_url: str | None = None
 
 
 class RunConfig(BaseModel):

@@ -7,7 +7,7 @@ set -euo pipefail
 SCRIPT_VERSION="1.0.0"
 MIN_PYTHON_MAJOR=3
 MIN_PYTHON_MINOR=9
-REPO_URL="https://github.com/breezetest/breezetest.git"
+REPO_URL="https://github.com/tryroot1234/breezetest.git"
 VENV_DIR=".venv"
 
 # --- Flags ---

@@ -14,7 +14,7 @@ $ErrorActionPreference = "Stop"
 $ScriptVersion = "1.0.0"
 $MinPythonMajor = 3
 $MinPythonMinor = 9
-$RepoUrl = "https://github.com/breezetest/breezetest.git"
+$RepoUrl = "https://github.com/tryroot1234/breezetest.git"
 $VenvDir = ".venv"
 
 # --- Logging ---

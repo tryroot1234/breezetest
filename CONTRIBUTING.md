@@ -7,13 +7,13 @@ Thanks for your interest in contributing!
 ### Automated (Recommended)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/breezetest/breezetest/main/install-dev.sh | bash
+curl -sSL https://raw.githubusercontent.com/tryroot1234/breezetest/main/install-dev.sh | bash
 ```
 
 ### Manual
 
 ```bash
-git clone https://github.com/breezetest/breezetest.git
+git clone https://github.com/tryroot1234/breezetest.git
 cd breezetest
 python3 -m venv .venv
 source .venv/bin/activate

@@ -23,13 +23,13 @@ BreezeTest is a YAML-driven end-to-end testing framework powered by Playwright. 
 **macOS / Linux:**
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/breezetest/breezetest/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/tryroot1234/breezetest/main/install.sh | bash
 ```
 
 **Windows (PowerShell):**
 
 ```powershell
-irm https://raw.githubusercontent.com/breezetest/breezetest/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/tryroot1234/breezetest/main/install.ps1 | iex
 ```
 
 These scripts automatically install Python (if needed), create a virtual environment, install BreezeTest, and set up the Playwright browser.
@@ -58,10 +58,10 @@ docker compose run breezetest run /app/tests
 
 ```bash
 # Automated
-curl -sSL https://raw.githubusercontent.com/breezetest/breezetest/main/install-dev.sh | bash
+curl -sSL https://raw.githubusercontent.com/tryroot1234/breezetest/main/install-dev.sh | bash
 
 # Or manually
-git clone https://github.com/breezetest/breezetest.git
+git clone https://github.com/tryroot1234/breezetest.git
 cd breezetest
 python3 -m venv .venv
 source .venv/bin/activate

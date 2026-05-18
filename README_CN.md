@@ -23,13 +23,13 @@ BreezeTest 是一个基于 Playwright 的 YAML 驱动端到端测试框架。用
 **macOS / Linux：**
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/breezetest/breezetest/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/tryroot1234/breezetest/main/install.sh | bash
 ```
 
 **Windows (PowerShell)：**
 
 ```powershell
-irm https://raw.githubusercontent.com/breezetest/breezetest/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/tryroot1234/breezetest/main/install.ps1 | iex
 ```
 
 脚本会自动安装 Python（如需要）、创建虚拟环境、安装 BreezeTest 和 Playwright 浏览器。
@@ -58,10 +58,10 @@ docker compose run breezetest run /app/tests
 
 ```bash
 # 自动化安装
-curl -sSL https://raw.githubusercontent.com/breezetest/breezetest/main/install-dev.sh | bash
+curl -sSL https://raw.githubusercontent.com/tryroot1234/breezetest/main/install-dev.sh | bash
 
 # 或手动安装
-git clone https://github.com/breezetest/breezetest.git
+git clone https://github.com/tryroot1234/breezetest.git
 cd breezetest
 python3 -m venv .venv
 source .venv/bin/activate

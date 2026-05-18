@@ -4,13 +4,21 @@ Thanks for your interest in contributing!
 
 ## Development Setup
 
+### Automated (Recommended)
+
 ```bash
-git clone https://github.com/YOUR_USERNAME/breezetest.git
+curl -sSL https://raw.githubusercontent.com/breezetest/breezetest/main/install-dev.sh | bash
+```
+
+### Manual
+
+```bash
+git clone https://github.com/breezetest/breezetest.git
 cd breezetest
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
-playwright install chromium
+playwright install --with-deps chromium
 ```
 
 ## Running Tests

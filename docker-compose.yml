@@ -1,0 +1,24 @@
+services:
+  breezetest:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./tests:/app/tests:ro
+      - ./breezetest-reports:/app/breezetest-reports
+      - ./breeze.yml:/app/breeze.yml:ro
+    entrypoint: ["breeze", "run"]
+    command: ["/app/tests"]
+
+  # Run all tests from workspace
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/app/workspace:ro
+      - ./breezetest-reports:/app/breezetest-reports
+    entrypoint: ["sh", "-c"]
+    command: ["breeze run /app/workspace/tests --report-dir /app/breezetest-reports"]
+    profiles:
+      - tools

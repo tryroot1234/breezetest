@@ -16,14 +16,62 @@ BreezeTest 是一个基于 Playwright 的 YAML 驱动端到端测试框架。用
 - **并行执行** - 多浏览器实例并行运行测试
 - **插件系统** - 通过自定义动作和钩子扩展功能
 
-## 快速开始
+## 安装
 
-### 安装
+### 一键安装（推荐）
+
+**macOS / Linux：**
+
+```bash
+curl -sSL https://raw.githubusercontent.com/breezetest/breezetest/main/install.sh | bash
+```
+
+**Windows (PowerShell)：**
+
+```powershell
+irm https://raw.githubusercontent.com/breezetest/breezetest/main/install.ps1 | iex
+```
+
+脚本会自动安装 Python（如需要）、创建虚拟环境、安装 BreezeTest 和 Playwright 浏览器。
+
+### pip 手动安装
 
 ```bash
 pip install breezetest
-playwright install chromium
+playwright install --with-deps chromium
 ```
+
+### Docker
+
+```bash
+docker build -t breezetest .
+docker run -v ./tests:/app/tests breezetest run /app/tests
+```
+
+或使用 Docker Compose：
+
+```bash
+docker compose run breezetest run /app/tests
+```
+
+### 从源码安装（开发者）
+
+```bash
+# 自动化安装
+curl -sSL https://raw.githubusercontent.com/breezetest/breezetest/main/install-dev.sh | bash
+
+# 或手动安装
+git clone https://github.com/breezetest/breezetest.git
+cd breezetest
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+playwright install --with-deps chromium
+```
+
+详见 [CONTRIBUTING.md](CONTRIBUTING.md) 了解完整开发环境搭建。
+
+## 快速开始
 
 ### 创建第一个测试
 

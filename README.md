@@ -16,14 +16,62 @@ BreezeTest is a YAML-driven end-to-end testing framework powered by Playwright. 
 - **Parallel execution** - Run tests across multiple browser instances
 - **Plugin system** - Extend with custom actions and hooks
 
-## Quick Start
+## Installation
 
-### Install
+### One-Line Install (Recommended)
+
+**macOS / Linux:**
+
+```bash
+curl -sSL https://raw.githubusercontent.com/breezetest/breezetest/main/install.sh | bash
+```
+
+**Windows (PowerShell):**
+
+```powershell
+irm https://raw.githubusercontent.com/breezetest/breezetest/main/install.ps1 | iex
+```
+
+These scripts automatically install Python (if needed), create a virtual environment, install BreezeTest, and set up the Playwright browser.
+
+### pip (Manual)
 
 ```bash
 pip install breezetest
-playwright install chromium
+playwright install --with-deps chromium
 ```
+
+### Docker
+
+```bash
+docker build -t breezetest .
+docker run -v ./tests:/app/tests breezetest run /app/tests
+```
+
+Or with Docker Compose:
+
+```bash
+docker compose run breezetest run /app/tests
+```
+
+### From Source (Developer)
+
+```bash
+# Automated
+curl -sSL https://raw.githubusercontent.com/breezetest/breezetest/main/install-dev.sh | bash
+
+# Or manually
+git clone https://github.com/breezetest/breezetest.git
+cd breezetest
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+playwright install --with-deps chromium
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full development setup.
+
+## Quick Start
 
 ### Create your first test
 

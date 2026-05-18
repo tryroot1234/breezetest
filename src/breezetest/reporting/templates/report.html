@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BreezeTest Report - {{ suite.suite_name }}</title>
+<title>BreezeTest 测试报告 - {{ suite.suite_name }}</title>
 <style>
 :root {
   --bg: #ffffff; --fg: #1a1a2e; --border: #e0e0e0;
@@ -15,13 +15,15 @@
   --card-bg: #1e293b; --hover: #334155;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--fg); line-height: 1.6; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif; background: var(--bg); color: var(--fg); line-height: 1.6; }
 .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
 header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
 h1 { font-size: 1.5rem; }
 .meta { font-size: 0.85rem; color: #666; }
 .dark .meta { color: #94a3b8; }
-.toggle { cursor: pointer; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--fg); font-size: 0.8rem; }
+.header-actions { display: flex; gap: 8px; }
+.toggle, .lang-btn { cursor: pointer; padding: 6px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--fg); font-size: 0.8rem; }
+.toggle:hover, .lang-btn:hover { background: var(--hover); }
 .stats { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
 .stat { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px; flex: 1; min-width: 120px; text-align: center; }
 .stat .number { font-size: 2rem; font-weight: bold; }
@@ -73,32 +75,35 @@ footer { text-align: center; padding: 30px; font-size: 0.85rem; color: #666; }
 <div class="container">
   <header>
     <div>
-      <h1>BreezeTest Report</h1>
+      <h1 data-i18n="title">BreezeTest 测试报告</h1>
       <div class="meta">{{ suite.suite_name }} &middot; {{ generated_at }} &middot; {{ suite.browser }}</div>
     </div>
-    <button class="toggle" onclick="document.body.classList.toggle('dark')">Toggle Dark Mode</button>
+    <div class="header-actions">
+      <button class="lang-btn" onclick="toggleLang()">EN/中</button>
+      <button class="toggle" onclick="document.body.classList.toggle('dark')" data-i18n="darkMode">深色模式</button>
+    </div>
   </header>
 
   <div class="stats">
-    <div class="stat"><div class="number">{{ suite.total }}</div><div class="label">Total</div></div>
-    <div class="stat passed"><div class="number">{{ suite.passed }}</div><div class="label">Passed</div></div>
-    <div class="stat failed"><div class="number">{{ suite.failed }}</div><div class="label">Failed</div></div>
-    <div class="stat skipped"><div class="number">{{ suite.skipped }}</div><div class="label">Skipped</div></div>
-    <div class="stat"><div class="number">{{ "%.1f"|format(suite.duration_ms / 1000) }}s</div><div class="label">Duration</div></div>
+    <div class="stat"><div class="number">{{ suite.total }}</div><div class="label" data-i18n="total">总计</div></div>
+    <div class="stat passed"><div class="number">{{ suite.passed }}</div><div class="label" data-i18n="passed">通过</div></div>
+    <div class="stat failed"><div class="number">{{ suite.failed }}</div><div class="label" data-i18n="failed">失败</div></div>
+    <div class="stat skipped"><div class="number">{{ suite.skipped }}</div><div class="label" data-i18n="skipped">跳过</div></div>
+    <div class="stat"><div class="number">{{ "%.1f"|format(suite.duration_ms / 1000) }}s</div><div class="label" data-i18n="duration">耗时</div></div>
   </div>
 
   <div class="filters">
-    <input type="text" id="search" placeholder="Search tests..." oninput="filterTests()">
-    <button class="active" onclick="setStatusFilter('all', this)">All</button>
-    <button onclick="setStatusFilter('passed', this)">Passed</button>
-    <button onclick="setStatusFilter('failed', this)">Failed</button>
-    <button onclick="setStatusFilter('skipped', this)">Skipped</button>
+    <input type="text" id="search" data-i18n-placeholder="searchPlaceholder" placeholder="搜索测试..." oninput="filterTests()">
+    <button class="active" onclick="setStatusFilter('all', this)" data-i18n="filterAll">全部</button>
+    <button onclick="setStatusFilter('passed', this)" data-i18n="filterPassed">通过</button>
+    <button onclick="setStatusFilter('failed', this)" data-i18n="filterFailed">失败</button>
+    <button onclick="setStatusFilter('skipped', this)" data-i18n="filterSkipped">跳过</button>
   </div>
 
   {% for test in suite.tests %}
   <div class="test-case" data-status="{{ test.status }}" data-name="{{ test.test_name|lower }}">
     <div class="test-header" onclick="this.parentElement.classList.toggle('open')">
-      <span class="badge {{ test.status }}">{{ test.status }}</span>
+      <span class="badge {{ test.status }}" data-i18n-status="{{ test.status }}">{{ test.status }}</span>
       <span class="test-name">{{ test.test_name }}</span>
       <span class="test-duration">{{ "%.2f"|format(test.duration_ms / 1000) }}s</span>
     </div>
@@ -128,9 +133,63 @@ footer { text-align: center; padding: 30px; font-size: 0.85rem; color: #666; }
   <img id="modal-img" src="" alt="screenshot">
 </div>
 
-<footer>Generated by BreezeTest v0.1.0</footer>
+<footer data-i18n="footer">由 BreezeTest v0.1.0 生成</footer>
 
 <script>
+const i18n = {
+  zh: {
+    title: 'BreezeTest 测试报告',
+    darkMode: '深色模式',
+    total: '总计', passed: '通过', failed: '失败', skipped: '跳过', duration: '耗时',
+    searchPlaceholder: '搜索测试...',
+    filterAll: '全部', filterPassed: '通过', filterFailed: '失败', filterSkipped: '跳过',
+    footer: '由 BreezeTest v0.1.0 生成',
+    passedLabel: '通过', failedLabel: '失败', skippedLabel: '跳过', errorLabel: '错误'
+  },
+  en: {
+    title: 'BreezeTest Report',
+    darkMode: 'Dark Mode',
+    total: 'Total', passed: 'Passed', failed: 'Failed', skipped: 'Skipped', duration: 'Duration',
+    searchPlaceholder: 'Search tests...',
+    filterAll: 'All', filterPassed: 'Passed', filterFailed: 'Failed', filterSkipped: 'Skipped',
+    footer: 'Generated by BreezeTest v0.1.0',
+    passedLabel: 'PASSED', failedLabel: 'FAILED', skippedLabel: 'SKIPPED', errorLabel: 'ERROR'
+  }
+};
+
+let currentLang = 'zh';
+
+function toggleLang() {
+  currentLang = currentLang === 'zh' ? 'en' : 'zh';
+  applyLang(currentLang);
+  localStorage.setItem('breeze-lang', currentLang);
+}
+
+function applyLang(lang) {
+  const t = i18n[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key]) el.textContent = t[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (t[key]) el.placeholder = t[key];
+  });
+  document.querySelectorAll('[data-i18n-status]').forEach(el => {
+    const status = el.getAttribute('data-i18n-status');
+    const key = status + 'Label';
+    if (t[key]) el.textContent = t[key];
+  });
+  document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+}
+
+// Restore language preference
+const savedLang = localStorage.getItem('breeze-lang');
+if (savedLang) {
+  currentLang = savedLang;
+  applyLang(currentLang);
+}
+
 function setStatusFilter(status, btn) {
   document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
